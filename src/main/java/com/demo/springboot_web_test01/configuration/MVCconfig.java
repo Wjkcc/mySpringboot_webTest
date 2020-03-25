@@ -2,6 +2,11 @@ package com.demo.springboot_web_test01.configuration;
 
 import com.demo.springboot_web_test01.interceptor.MyHandlerInterceptor;
 import com.demo.springboot_web_test01.locale.MyLocaleResolver;
+import org.springframework.boot.autoconfigure.web.embedded.EmbeddedWebServerFactoryCustomizerAutoConfiguration;
+import org.springframework.boot.web.server.ConfigurableWebServerFactory;
+import org.springframework.boot.web.server.WebServerFactory;
+import org.springframework.boot.web.server.WebServerFactoryCustomizer;
+import org.springframework.boot.web.servlet.server.ConfigurableServletWebServerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
@@ -17,6 +22,16 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class MVCconfig implements WebMvcConfigurer {
 
+
+    @Bean
+    public WebServerFactoryCustomizer webServerFactoryCustomizer() {
+        return new WebServerFactoryCustomizer<ConfigurableServletWebServerFactory>() {
+            @Override
+            public void customize(ConfigurableServletWebServerFactory  factory) {
+                factory.setPort(8090);
+            }
+        };
+    }
     public void addViewControllers(ViewControllerRegistry registry) {
         // 浏览器请求darling 来到index页面
         registry.addViewController("/darling").setViewName("index");
