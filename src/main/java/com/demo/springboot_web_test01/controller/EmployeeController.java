@@ -4,13 +4,12 @@ import com.demo.springboot_web_test01.dao.DepartmentDao;
 import com.demo.springboot_web_test01.dao.EmployeeDao;
 import com.demo.springboot_web_test01.pojo.Department;
 import com.demo.springboot_web_test01.pojo.Employee;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
 
@@ -25,7 +24,10 @@ public class EmployeeController {
     private EmployeeDao employeeDao;
     @Autowired
     private DepartmentDao departmentDao;
-    @RequestMapping(value = "/emps")
+
+    private static final Logger log = LoggerFactory.getLogger(EmployeeController.class);
+
+    @GetMapping(value = "/emps")
     public String list(Model model) {
         Collection<Employee> employees = employeeDao.list();
         for(Employee e:employees) {
@@ -33,17 +35,6 @@ public class EmployeeController {
         }
         model.addAttribute("emps",employees);
         return "emp/list";
-    }
-
-    @DeleteMapping(value = "/emp")
-    public String del (Integer id ,Model model) {
-        if (employeeDao.del(id)) {
-            Collection<Employee> employees = employeeDao.list();
-
-            model.addAttribute("emps",employees);
-            return "emp/list";
-        }
-        return "error";
     }
 
     @GetMapping("/emp")
@@ -59,6 +50,30 @@ public class EmployeeController {
         employee.setAge(16);
        employeeDao.save(employee);
 
-        return "forward:/emps";
+        return "redirect:/emps";
+    }
+
+    @GetMapping("/edit/{id}")
+    public String toEdit(Model model,@PathVariable("id") Integer id) {
+        Collection<Department> departments = departmentDao.list();
+        model.addAttribute("department", departments);
+        Employee employee = employeeDao.get(id);
+
+        log.info("edit" +employee);
+        model.addAttribute("emp", employee);
+        return "emp/edit";
+    }
+
+    @PutMapping("/emp")
+    public String edit(Employee employee) {
+        System.out.println(employee);
+        employeeDao.edit(employee);
+        return "redirect:/emps";
+    }
+
+    @DeleteMapping("/emp/{id}")
+    public String del(@PathVariable("id") Integer id) {
+        employeeDao.del(id);
+        return "redirect:/emps";
     }
 }

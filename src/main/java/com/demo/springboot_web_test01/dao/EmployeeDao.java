@@ -26,9 +26,9 @@ public class EmployeeDao {
     static {
         map = new HashMap<>();
 
-        map.put(1, new Employee(2, "02", 16,new Date(),"12@ee.com",0, 1, new Department(1,"07", new Date())));
-        map.put(2, new Employee(16, "广", 16,new Date(),"122@ee.com",1, 1, new Department(1,"07", new Date())));
-        map.put(3, new Employee(15, "莓", 16,new Date(),"1211@ee.com",0, 1, new Department(1,"07", new Date())));
+        map.put(2, new Employee(2, "02", 16,new Date(),"12@ee.com",0, 1, new Department(1,"07", new Date())));
+        map.put(16, new Employee(16, "广", 16,new Date(),"122@ee.com",1, 1, new Department(1,"07", new Date())));
+        map.put(15, new Employee(15, "莓", 16,new Date(),"1211@ee.com",0, 1, new Department(1,"07", new Date())));
     }
 
     private static Integer initid = 18;
@@ -68,9 +68,17 @@ public class EmployeeDao {
 
     public boolean edit (Employee employee) {
         if (map.containsKey(employee.getId())) {
+            Department department = departmentDao.getDepartment(employee.getDepartmentId());
+            employee.setDepartment(department);
             map.replace(employee.getId(), employee);
             return true;
         }
         return false;
+    }
+
+    public Employee get(Integer id) {
+        Employee employee = map.get(id);
+        return employee;
+
     }
 }

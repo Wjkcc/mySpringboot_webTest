@@ -23,15 +23,9 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class MVCconfig implements WebMvcConfigurer {
 
 
-    @Bean
-    public WebServerFactoryCustomizer webServerFactoryCustomizer() {
-        return new WebServerFactoryCustomizer<ConfigurableServletWebServerFactory>() {
-            @Override
-            public void customize(ConfigurableServletWebServerFactory  factory) {
-                factory.setPort(8090);
-            }
-        };
-    }
+
+
+
     public void addViewControllers(ViewControllerRegistry registry) {
         // 浏览器请求darling 来到index页面
         registry.addViewController("/darling").setViewName("index");
